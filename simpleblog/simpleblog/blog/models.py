@@ -1,8 +1,9 @@
 from django.conf import settings
 from django.db import models
-from django.utils import timezone
-from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
+from django.utils import timezone
+from django.utils.text import slugify
+from django.utils.translation import gettext_lazy as _
 
 
 class PostStatus(models.TextChoices):
@@ -12,7 +13,7 @@ class PostStatus(models.TextChoices):
 
 class Post(models.Model):
     title = models.CharField(max_length=255)
-    slug = models.SlugField(max_length=255, unique_for_date="publish")
+    slug = models.SlugField(null=True, blank=True, max_length=255, unique_for_date="publish")
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="blog_posts"
     )
@@ -32,3 +33,7 @@ class Post(models.Model):
 
     def get_absolute_url(self):
         return reverse("blog:post_detail", kwargs={"pk": self.pk})
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.title, allow_unicode=True)
+        return super(Post, self).save(*args, **kwargs)
