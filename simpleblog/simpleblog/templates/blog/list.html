@@ -1,0 +1,15 @@
+{% extends "base.html" %} 
+{% load i18n static %} 
+{% block title %}{% trans 'Simple Blog' %}{% endblock %}
+
+{% block content %}
+
+    <h1>{% trans 'All Articles' %}</h1>
+    <hr>
+    {% for post in posts %}
+        <h2><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h2><br>
+        <p>{{ post.body }}</p>
+    {% endfor %}
+    {% include "pagination.html" with page=page_obj %}
+{% endblock content %}
+    
