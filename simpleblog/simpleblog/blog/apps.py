@@ -9,7 +9,7 @@ class BlogConfig(AppConfig):
 
     def ready(self):
         try:
-            import simpleblog.users.signals  # noqa F401
+            import simpleblog.blog.signals  # noqa F401
         except ImportError:
             pass
 
